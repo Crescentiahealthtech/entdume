@@ -18,7 +18,22 @@ npm run build
 npm run preview
 ~~~
 
-Astro generates the static site in dist/. For Cloudflare Pages, use npm run build as the build command and dist as the output directory.
+Astro generates the static site in dist/. For Cloudflare Pages, the build command is npm run build and the output directory is dist.
+
+## Automatic Cloudflare Pages deployment
+
+The GitHub Actions workflow builds and deploys the site when a commit lands on main. Pull requests and pushes to other branches run the build check only. To enable production deployment, configure these values in the repository's GitHub settings under **Settings → Secrets and variables → Actions**:
+
+**Repository secrets**
+- CLOUDFLARE_API_TOKEN — an API token scoped to the correct Cloudflare account, with Account / Cloudflare Pages / Edit permission.
+- CLOUDFLARE_ACCOUNT_ID — the Cloudflare account ID that owns the Pages project.
+
+**Repository variable**
+- CLOUDFLARE_PAGES_PROJECT_NAME — the exact Pages project name from Cloudflare Workers & Pages. This is the project name, not the custom domain.
+
+The Cloudflare Pages project's configured production branch must be main. After saving the secret and variable, open **Actions → Build and deploy** and run the workflow against main once, or push/merge a new commit to main. A successful build without these deployment settings will not publish to the live site.
+
+If Cloudflare Pages Git integration is already configured for this repository, confirm that it points to this repository and main as the production branch. If you choose this GitHub Actions workflow as the deployment source, consider disabling Cloudflare's automatic production-branch deployment after verifying the Actions-based deployment to avoid two competing production deploys.
 
 ## What's included
 
